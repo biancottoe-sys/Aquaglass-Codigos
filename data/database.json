@@ -1,0 +1,521 @@
+{
+  "version": "1.0.0",
+  "brand": {
+    "name": "Aquaglass",
+    "tagline": "Codificador maestro de productos",
+    "logo": "assets/logo.png",
+    "placeholderImage": "assets/placeholder-product.png"
+  },
+  "sharedOptions": {
+    "medidas": [
+      {
+        "code": "140070",
+        "name": "140 x 70 cm"
+      },
+      {
+        "code": "150075",
+        "name": "150 x 75 cm"
+      },
+      {
+        "code": "160080",
+        "name": "160 x 80 cm"
+      },
+      {
+        "code": "170090",
+        "name": "170 x 90 cm"
+      },
+      {
+        "code": "200120",
+        "name": "200 x 120 cm"
+      }
+    ],
+    "tipoBaneraReceptaculo": [
+      {
+        "code": "E",
+        "name": "Estándar"
+      },
+      {
+        "code": "S",
+        "name": "Slim"
+      }
+    ],
+    "materialBaneraReceptaculo": [
+      {
+        "code": "A",
+        "name": "Ashstone"
+      },
+      {
+        "code": "S",
+        "name": "Solid Surface"
+      }
+    ],
+    "colorBaneraReceptaculo": [
+      {
+        "code": "0",
+        "name": "Blanco",
+        "swatch": "#ffffff"
+      },
+      {
+        "code": "A",
+        "name": "Gris Tisa",
+        "swatch": "#c9c9c4"
+      },
+      {
+        "code": "B",
+        "name": "Gris",
+        "swatch": "#9ea4a8"
+      },
+      {
+        "code": "C",
+        "name": "Gris Grafito",
+        "swatch": "#41464b"
+      },
+      {
+        "code": "D",
+        "name": "Nude",
+        "swatch": "#d7c1ae"
+      },
+      {
+        "code": "E",
+        "name": "Negro",
+        "swatch": "#16181b"
+      }
+    ],
+    "terminacionBaneraReceptaculo": [
+      {
+        "code": "B",
+        "name": "Brillante"
+      },
+      {
+        "code": "M",
+        "name": "Mate"
+      }
+    ],
+    "aMedida": [
+      {
+        "code": "0",
+        "name": "Estándar"
+      },
+      {
+        "code": "1",
+        "name": "A Medida"
+      }
+    ],
+    "desbordeDesagote": [
+      {
+        "code": "0",
+        "name": "DTC + Desborde Interno"
+      },
+      {
+        "code": "1",
+        "name": "DTC Sin Desborde"
+      },
+      {
+        "code": "2",
+        "name": "Desagote Flat Sin Desborde"
+      }
+    ],
+    "mano": [
+      {
+        "code": "0",
+        "name": "Centrado"
+      },
+      {
+        "code": "I",
+        "name": "Izquierda"
+      },
+      {
+        "code": "D",
+        "name": "Derecha"
+      }
+    ],
+    "colorHidroMini": [
+      {
+        "code": "BL",
+        "name": "Blanco",
+        "swatch": "#ffffff"
+      },
+      {
+        "code": "GT",
+        "name": "Gris Tiza",
+        "swatch": "#c9c9c4"
+      },
+      {
+        "code": "G",
+        "name": "Gris",
+        "swatch": "#9ea4a8"
+      },
+      {
+        "code": "GG",
+        "name": "Gris Grafito",
+        "swatch": "#41464b"
+      },
+      {
+        "code": "NU",
+        "name": "Nude",
+        "swatch": "#d7c1ae"
+      },
+      {
+        "code": "NE",
+        "name": "Negro",
+        "swatch": "#16181b"
+      }
+    ],
+    "terminacionHidroMini": [
+      {
+        "code": "BR",
+        "name": "Brillante"
+      },
+      {
+        "code": "MA",
+        "name": "Mate"
+      }
+    ],
+    "equipamiento": [
+      {
+        "code": "H",
+        "name": "Hidro"
+      },
+      {
+        "code": "HP",
+        "name": "Hidro Plus"
+      },
+      {
+        "code": "PS",
+        "name": "Premium Shiatsu"
+      },
+      {
+        "code": "FS",
+        "name": "Full Spa"
+      },
+      {
+        "code": "E",
+        "name": "Eco"
+      }
+    ],
+    "materialHidroMini": [
+      {
+        "code": "ASH",
+        "name": "Ashstone"
+      },
+      {
+        "code": "SS",
+        "name": "Solid Surface"
+      },
+      {
+        "code": "ACR",
+        "name": "Acrílico"
+      }
+    ]
+  },
+  "categories": [
+    {
+      "id": "baneras",
+      "code": "BAÑ",
+      "displayCode": "BAÑ",
+      "name": "Bañeras",
+      "singularName": "Bañera",
+      "description": "Bañeras premium Aquaglass para proyectos residenciales y comerciales.",
+      "image": "assets/categoria-baneras.png",
+      "models": [
+        {
+          "code": "ARU",
+          "name": "Aruba"
+        },
+        {
+          "code": "MIL",
+          "name": "Milano"
+        }
+      ],
+      "fields": [
+        {
+          "id": "modelo",
+          "label": "Modelo",
+          "descriptionLabel": "",
+          "source": "models"
+        },
+        {
+          "id": "tipo",
+          "label": "Tipo",
+          "descriptionLabel": "",
+          "source": "tipoBaneraReceptaculo"
+        },
+        {
+          "id": "medida",
+          "label": "Medida",
+          "descriptionLabel": "",
+          "source": "medidas"
+        },
+        {
+          "id": "material",
+          "label": "Material",
+          "descriptionLabel": "material",
+          "source": "materialBaneraReceptaculo"
+        },
+        {
+          "id": "color",
+          "label": "Color",
+          "descriptionLabel": "color",
+          "source": "colorBaneraReceptaculo"
+        },
+        {
+          "id": "terminacion",
+          "label": "Terminación",
+          "descriptionLabel": "terminación",
+          "source": "terminacionBaneraReceptaculo"
+        },
+        {
+          "id": "amedida",
+          "label": "A medida",
+          "descriptionLabel": "",
+          "source": "aMedida"
+        },
+        {
+          "id": "desborde",
+          "label": "Desborde / Desagote",
+          "descriptionLabel": "",
+          "source": "desbordeDesagote"
+        },
+        {
+          "id": "mano",
+          "label": "Mano",
+          "descriptionLabel": "mano",
+          "source": "mano"
+        }
+      ],
+      "codeOrder": [
+        "category",
+        "modelo",
+        "tipo",
+        "medida",
+        "material",
+        "color",
+        "terminacion",
+        "amedida",
+        "desborde",
+        "mano"
+      ]
+    },
+    {
+      "id": "receptaculos",
+      "code": "REC",
+      "displayCode": "REC",
+      "name": "Receptáculos",
+      "singularName": "Receptáculo",
+      "description": "Receptáculos modernos de alta resistencia con terminaciones Aquaglass.",
+      "image": "assets/categoria-receptaculos.png",
+      "models": [
+        {
+          "code": "MON",
+          "name": "Monaco"
+        },
+        {
+          "code": "CAP",
+          "name": "Capri"
+        }
+      ],
+      "fields": [
+        {
+          "id": "modelo",
+          "label": "Modelo",
+          "descriptionLabel": "",
+          "source": "models"
+        },
+        {
+          "id": "tipo",
+          "label": "Tipo",
+          "descriptionLabel": "",
+          "source": "tipoBaneraReceptaculo"
+        },
+        {
+          "id": "medida",
+          "label": "Medida",
+          "descriptionLabel": "",
+          "source": "medidas"
+        },
+        {
+          "id": "material",
+          "label": "Material",
+          "descriptionLabel": "material",
+          "source": "materialBaneraReceptaculo"
+        },
+        {
+          "id": "color",
+          "label": "Color",
+          "descriptionLabel": "color",
+          "source": "colorBaneraReceptaculo"
+        },
+        {
+          "id": "terminacion",
+          "label": "Terminación",
+          "descriptionLabel": "terminación",
+          "source": "terminacionBaneraReceptaculo"
+        },
+        {
+          "id": "amedida",
+          "label": "A medida",
+          "descriptionLabel": "",
+          "source": "aMedida"
+        },
+        {
+          "id": "desborde",
+          "label": "Desborde / Desagote",
+          "descriptionLabel": "",
+          "source": "desbordeDesagote"
+        },
+        {
+          "id": "mano",
+          "label": "Mano",
+          "descriptionLabel": "mano",
+          "source": "mano"
+        }
+      ],
+      "codeOrder": [
+        "category",
+        "modelo",
+        "tipo",
+        "medida",
+        "material",
+        "color",
+        "terminacion",
+        "amedida",
+        "desborde",
+        "mano"
+      ]
+    },
+    {
+      "id": "hidromasajes",
+      "code": "HID",
+      "displayCode": "HID",
+      "name": "Hidromasajes",
+      "singularName": "Hidromasaje",
+      "description": "Hidromasajes configurables por equipamiento, material y terminación.",
+      "image": "assets/categoria-hidromasajes.png",
+      "models": [
+        {
+          "code": "ARU",
+          "name": "Aruba"
+        },
+        {
+          "code": "MIL",
+          "name": "Milano"
+        }
+      ],
+      "fields": [
+        {
+          "id": "modelo",
+          "label": "Modelo",
+          "descriptionLabel": "",
+          "source": "models"
+        },
+        {
+          "id": "color",
+          "label": "Color",
+          "descriptionLabel": "",
+          "source": "colorHidroMini"
+        },
+        {
+          "id": "terminacion",
+          "label": "Terminaci?n",
+          "descriptionLabel": "",
+          "source": "terminacionHidroMini"
+        },
+        {
+          "id": "amedida",
+          "label": "Tipo de fabricaci?n",
+          "descriptionLabel": "",
+          "source": "aMedida"
+        },
+        {
+          "id": "equipamiento",
+          "label": "Equipamiento",
+          "descriptionLabel": "",
+          "source": "equipamiento"
+        },
+        {
+          "id": "material",
+          "label": "Material",
+          "descriptionLabel": "",
+          "source": "materialHidroMini"
+        }
+      ],
+      "codeOrder": [
+        "category",
+        "modelo",
+        "color",
+        "terminacion",
+        "amedida",
+        "equipamiento",
+        "material"
+      ],
+      "descriptionMode": "compact"
+    },
+    {
+      "id": "mini-piscinas",
+      "code": "MPI",
+      "displayCode": "MPI",
+      "name": "Mini Piscinas",
+      "singularName": "Mini Piscina",
+      "description": "Mini piscinas Aquaglass para experiencias de relax compactas y premium.",
+      "image": "assets/categoria-mini-piscinas.png",
+      "models": [
+        {
+          "code": "ARU",
+          "name": "Aruba"
+        },
+        {
+          "code": "MIL",
+          "name": "Milano"
+        }
+      ],
+      "fields": [
+        {
+          "id": "modelo",
+          "label": "Modelo",
+          "descriptionLabel": "",
+          "source": "models"
+        },
+        {
+          "id": "color",
+          "label": "Color",
+          "descriptionLabel": "",
+          "source": "colorHidroMini"
+        },
+        {
+          "id": "terminacion",
+          "label": "Terminaci?n",
+          "descriptionLabel": "",
+          "source": "terminacionHidroMini"
+        },
+        {
+          "id": "amedida",
+          "label": "Tipo de fabricaci?n",
+          "descriptionLabel": "",
+          "source": "aMedida"
+        },
+        {
+          "id": "equipamiento",
+          "label": "Equipamiento",
+          "descriptionLabel": "",
+          "source": "equipamiento"
+        },
+        {
+          "id": "material",
+          "label": "Material",
+          "descriptionLabel": "",
+          "source": "materialHidroMini"
+        }
+      ],
+      "codeOrder": [
+        "category",
+        "modelo",
+        "color",
+        "terminacion",
+        "amedida",
+        "equipamiento",
+        "material"
+      ],
+      "descriptionMode": "compact"
+    }
+  ]
+}
