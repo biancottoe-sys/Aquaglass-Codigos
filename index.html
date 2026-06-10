@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aquaglass | Codificador maestro</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#inicio" aria-label="Inicio Aquaglass">
+        <img src="assets/logo.png" alt="Aquaglass" class="brand-logo">
+        <span>
+          <small>Configurador interno</small>
+          <strong>Codificador Maestro Aquaglass</strong>
+        </span>
+      </a>
+      <div class="top-actions">
+        <span class="status-pill" id="databaseStatus">Cargando base local</span>
+        <button type="button" class="secondary-button" id="masterToggleBtn">Trabajar maestra</button>
+        <button type="button" class="ghost-button" id="resetBtn">Reiniciar</button>
+      </div>
+    </header>
+
+    <main id="inicio" class="layout">
+      <section class="intro-band">
+        <div>
+          <img src="assets/logo-white.png" alt="Aquaglass Whirlpool Systems" class="hero-logo">
+          <h1>Configuracion guiada de productos Aquaglass</h1>
+          <p>Elegi familia, modelo y variantes. El codigo tecnico y la descripcion comercial se actualizan en tiempo real.</p>
+        </div>
+        <div class="live-code-card" aria-label="Vista rapida de codigo">
+          <span>Codigo en vivo</span>
+          <strong id="heroCode">---</strong>
+        </div>
+      </section>
+
+      <nav class="breadcrumb" id="breadcrumb" aria-label="Ruta de configuracion">
+        <span>Inicio</span>
+      </nav>
+
+      <section class="category-section" aria-labelledby="categoryTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Paso 1</p>
+            <h2 id="categoryTitle">Elegir familia</h2>
+          </div>
+          <p>Tarjetas de producto listas para configurar.</p>
+        </div>
+        <div class="category-grid" id="categoryGrid"></div>
+      </section>
+
+      <div class="workspace-grid">
+        <section class="configurator" aria-labelledby="configTitle">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow" id="stepLabel">Paso 2</p>
+              <h2 id="configTitle">Configuracion</h2>
+            </div>
+            <button type="button" class="ghost-button" id="backToCategoriesBtn">Volver a categorias</button>
+          </div>
+          <div class="missing-alert" id="missingAlert" hidden></div>
+          <div class="option-sections" id="optionSections"></div>
+        </section>
+
+        <aside class="summary-panel" aria-labelledby="summaryTitle">
+          <div class="summary-sticky">
+            <div class="summary-hero">
+              <img id="summaryImage" src="assets/placeholder-product.png" alt="Producto Aquaglass configurado">
+              <span class="summary-code-chip" id="summaryCategory">---</span>
+            </div>
+
+            <div class="summary-content">
+              <p class="eyebrow">Vista previa permanente</p>
+              <h2 id="summaryTitle">Resumen del producto</h2>
+
+              <div class="progress-block">
+                <div class="progress-meta">
+                  <span id="progressText">Faltan completar opciones</span>
+                  <strong id="progressPercent">0%</strong>
+                </div>
+                <div class="progress-track" aria-hidden="true">
+                  <span id="progressBar"></span>
+                </div>
+              </div>
+
+              <dl class="selected-list" id="selectedList"></dl>
+
+              <div class="result-card">
+                <label for="generatedCode">Codigo final</label>
+                <output id="generatedCode">---</output>
+                <button type="button" class="primary-button" id="copyCodeBtn">Copiar codigo</button>
+              </div>
+
+              <div class="result-card">
+                <label for="generatedDescription">Descripcion comercial</label>
+                <output id="generatedDescription">---</output>
+                <button type="button" class="secondary-button" id="copyDescriptionBtn">Copiar descripcion</button>
+              </div>
+
+              <button type="button" class="save-button" id="saveHistoryBtn">Guardar configuracion</button>
+              <p class="feedback" id="feedback" aria-live="polite"></p>
+            </div>
+          </div>
+        </aside>
+      </div>
+
+      <section class="history-section" aria-labelledby="historyTitle">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Historial local</p>
+            <h2 id="historyTitle">Ultimas configuraciones</h2>
+          </div>
+          <div class="history-actions">
+            <input type="search" id="historySearch" placeholder="Buscar por codigo, categoria o modelo" aria-label="Buscar historial">
+            <button type="button" class="secondary-button" id="exportCsvBtn">Exportar CSV</button>
+            <button type="button" class="secondary-button" id="exportJsonBtn">Exportar JSON</button>
+            <button type="button" class="danger-button" id="clearHistoryBtn">Vaciar historial</button>
+          </div>
+        </div>
+        <div class="history-list" id="historyList"></div>
+      </section>
+
+      <section class="master-section" id="masterSection" aria-labelledby="masterTitle" hidden>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Base maestra</p>
+            <h2 id="masterTitle">Trabajar maestra</h2>
+          </div>
+          <div class="history-actions">
+            <select id="masterCategorySelect" aria-label="Categoria a editar"></select>
+            <button type="button" class="secondary-button" id="exportMasterBtn">Exportar maestra JSON</button>
+            <button type="button" class="danger-button" id="resetMasterBtn">Restaurar base original</button>
+          </div>
+        </div>
+
+        <p class="master-help">
+          Agrega modelos, crea variantes o modifica opciones existentes. Los cambios se guardan en este navegador y se reflejan al instante en el configurador.
+        </p>
+        <p class="feedback" id="masterStatus" aria-live="polite"></p>
+
+        <div class="master-grid">
+          <article class="master-card">
+            <div class="master-card-header">
+              <div>
+                <p class="eyebrow">Lineas / modelos</p>
+                <h3>Modelos de la categoria</h3>
+              </div>
+            </div>
+            <div class="master-form">
+              <label>
+                Codigo
+                <input type="text" id="modelCodeInput" placeholder="Ej: ARU">
+              </label>
+              <label>
+                Nombre
+                <input type="text" id="modelNameInput" placeholder="Ej: Aruba">
+              </label>
+              <button type="button" class="primary-button" id="addModelBtn">Agregar modelo</button>
+            </div>
+            <div class="master-list" id="modelList"></div>
+          </article>
+
+          <article class="master-card">
+            <div class="master-card-header">
+              <div>
+                <p class="eyebrow">Variantes</p>
+                <h3>Opciones por campo</h3>
+              </div>
+              <select id="variantFieldSelect" aria-label="Campo de variantes"></select>
+            </div>
+            <div class="master-form">
+              <label>
+                Codigo
+                <input type="text" id="optionCodeInput" placeholder="Ej: 180090">
+              </label>
+              <label>
+                Nombre
+                <input type="text" id="optionNameInput" placeholder="Ej: 180 x 90 cm">
+              </label>
+              <label>
+                Color
+                <input type="color" id="optionSwatchInput" value="#ffffff">
+              </label>
+              <button type="button" class="primary-button" id="addOptionBtn">Agregar variante</button>
+            </div>
+            <div class="master-list" id="optionList"></div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <iframe id="databaseFrame" src="data/database.json" title="Base de datos Aquaglass" hidden></iframe>
+  <script type="application/json" id="databaseFallback">
+{
+  "version": "1.0.0",
+  "brand": {
+    "name": "Aquaglass",
+    "tagline": "Codificador maestro de productos",
+    "logo": "assets/logo.png",
+    "placeholderImage": "assets/placeholder-product.png"
+  },
+  "sharedOptions": {
+    "medidas": [
+      {
+        "code": "140070",
+        "name": "140 x 70 cm"
+      },
+      {
+        "code": "150075",
+        "name": "150 x 75 cm"
+      },
+      {
+        "code": "160080",
+        "name": "160 x 80 cm"
+      },
+      {
+        "code": "170090",
+        "name": "170 x 90 cm"
+      },
+      {
+        "code": "200120",
+        "name": "200 x 120 cm"
+      }
+    ],
+    "tipoBaneraReceptaculo": [
+      {
+        "code": "E",
+        "name": "Estándar"
+      },
+      {
+        "code": "S",
+        "name": "Slim"
+      }
+    ],
+    "materialBaneraReceptaculo": [
+      {
+        "code": "A",
+        "name": "Ashstone"
+      },
+      {
+        "code": "S",
+        "name": "Solid Surface"
+      }
+    ],
+    "colorBaneraReceptaculo": [
+      {
+        "code": "0",
+        "name": "Blanco",
+        "swatch": "#ffffff"
+      },
+      {
+        "code": "A",
+        "name": "Gris Tisa",
+        "swatch": "#c9c9c4"
+      },
+      {
+        "code": "B",
+        "name": "Gris",
+        "swatch": "#9ea4a8"
+      },
+      {
+        "code": "C",
+        "name": "Gris Grafito",
+        "swatch": "#41464b"
+      },
+      {
+        "code": "D",
+        "name": "Nude",
+        "swatch": "#d7c1ae"
+      },
+      {
+        "code": "E",
+        "name": "Negro",
+        "swatch": "#16181b"
+      }
+    ],
+    "terminacionBaneraReceptaculo": [
+      {
+        "code": "B",
+        "name": "Brillante"
+      },
+      {
+        "code": "M",
+        "name": "Mate"
+      }
+    ],
+    "aMedida": [
+      {
+        "code": "0",
+        "name": "Estándar"
+      },
+      {
+        "code": "1",
+        "name": "A Medida"
+      }
+    ],
+    "desbordeDesagote": [
+      {
+        "code": "0",
+        "name": "DTC + Desborde Interno"
+      },
+      {
+        "code": "1",
+        "name": "DTC Sin Desborde"
+      },
+      {
+        "code": "2",
+        "name": "Desagote Flat Sin Desborde"
+      }
+    ],
+    "mano": [
+      {
+        "code": "0",
+        "name": "Centrado"
+      },
+      {
+        "code": "I",
+        "name": "Izquierda"
+      },
+      {
+        "code": "D",
+        "name": "Derecha"
+      }
+    ],
+    "colorHidroMini": [
+      {
+        "code": "BL",
+        "name": "Blanco",
+        "swatch": "#ffffff"
+      },
+      {
+        "code": "GT",
+        "name": "Gris Tiza",
+        "swatch": "#c9c9c4"
+      },
+      {
+        "code": "G",
+        "name": "Gris",
+        "swatch": "#9ea4a8"
+      },
+      {
+        "code": "GG",
+        "name": "Gris Grafito",
+        "swatch": "#41464b"
+      },
+      {
+        "code": "NU",
+        "name": "Nude",
+        "swatch": "#d7c1ae"
+      },
+      {
+        "code": "NE",
+        "name": "Negro",
+        "swatch": "#16181b"
+      }
+    ],
+    "terminacionHidroMini": [
+      {
+        "code": "BR",
+        "name": "Brillante"
+      },
+      {
+        "code": "MA",
+        "name": "Mate"
+      }
+    ],
+    "equipamiento": [
+      {
+        "code": "H",
+        "name": "Hidro"
+      },
+      {
+        "code": "HP",
+        "name": "Hidro Plus"
+      },
+      {
+        "code": "PS",
+        "name": "Premium Shiatsu"
+      },
+      {
+        "code": "FS",
+        "name": "Full Spa"
+      },
+      {
+        "code": "E",
+        "name": "Eco"
+      }
+    ],
+    "materialHidroMini": [
+      {
+        "code": "ASH",
+        "name": "Ashstone"
+      },
+      {
+        "code": "SS",
+        "name": "Solid Surface"
+      },
+      {
+        "code": "ACR",
+        "name": "Acrílico"
+      }
+    ]
+  },
+  "categories": [
+    {
+      "id": "baneras",
+      "code": "BAÑ",
+      "displayCode": "BAÑ",
+      "name": "Bañeras",
+      "singularName": "Bañera",
+      "description": "Bañeras premium Aquaglass para proyectos residenciales y comerciales.",
+      "image": "assets/categoria-baneras.png",
+      "models": [
+        {
+          "code": "ARU",
+          "name": "Aruba"
+        },
+        {
+          "code": "MIL",
+          "name": "Milano"
+        }
+      ],
+      "fields": [
+        {
+          "id": "modelo",
+          "label": "Modelo",
+          "descriptionLabel": "",
+          "source": "models"
+        },
+        {
+          "id": "tipo",
+          "label": "Tipo",
+          "descriptionLabel": "",
+          "source": "tipoBaneraReceptaculo"
+        },
+        {
+          "id": "medida",
+          "label": "Medida",
+          "descriptionLabel": "",
+          "source": "medidas"
+        },
+        {
+          "id": "material",
+          "label": "Material",
+          "descriptionLabel": "material",
+          "source": "materialBaneraReceptaculo"
+        },
+        {
+          "id": "color",
+          "label": "Color",
+          "descriptionLabel": "color",
+          "source": "colorBaneraReceptaculo"
+        },
+        {
+          "id": "terminacion",
+          "label": "Terminación",
+          "descriptionLabel": "terminación",
+          "source": "terminacionBaneraReceptaculo"
+        },
+        {
+          "id": "amedida",
+          "label": "A medida",
+          "descriptionLabel": "",
+          "source": "aMedida"
+        },
+        {
+          "id": "desborde",
+          "label": "Desborde / Desagote",
+          "descriptionLabel": "",
+          "source": "desbordeDesagote"
+        },
+        {
+          "id": "mano",
+          "label": "Mano",
+          "descriptionLabel": "mano",
+          "source": "mano"
+        }
+      ],
+      "codeOrder": [
+        "category",
+        "modelo",
+        "tipo",
+        "medida",
+        "material",
+        "color",
+        "terminacion",
+        "amedida",
+        "desborde",
+        "mano"
+      ]
+    },
+    {
+      "id": "receptaculos",
+      "code": "REC",
+      "displayCode": "REC",
+      "name": "Receptáculos",
+      "singularName": "Receptáculo",
+      "description": "Receptáculos modernos de alta resistencia con terminaciones Aquaglass.",
+      "image": "assets/categoria-receptaculos.png",
+      "models": [
+        {
+          "code": "MON",
+          "name": "Monaco"
+        },
+        {
+          "code": "CAP",
+          "name": "Capri"
+        }
+      ],
+      "fields": [
+        {
+          "id": "modelo",
+          "label": "Modelo",
+          "descriptionLabel": "",
+          "source": "models"
+        },
+        {
+          "id": "tipo",
+          "label": "Tipo",
+          "descriptionLabel": "",
+          "source": "tipoBaneraReceptaculo"
+        },
+        {
+          "id": "medida",
+          "label": "Medida",
+          "descriptionLabel": "",
+          "source": "medidas"
+        },
+        {
+          "id": "material",
+          "label": "Material",
+          "descriptionLabel": "material",
+          "source": "materialBaneraReceptaculo"
+        },
+        {
+          "id": "color",
+          "label": "Color",
+          "descriptionLabel": "color",
+          "source": "colorBaneraReceptaculo"
+        },
+        {
+          "id": "terminacion",
+          "label": "Terminación",
+          "descriptionLabel": "terminación",
+          "source": "terminacionBaneraReceptaculo"
+        },
+        {
+          "id": "amedida",
+          "label": "A medida",
+          "descriptionLabel": "",
+          "source": "aMedida"
+        },
+        {
+          "id": "desborde",
+          "label": "Desborde / Desagote",
+          "descriptionLabel": "",
+          "source": "desbordeDesagote"
+        },
+        {
+          "id": "mano",
+          "label": "Mano",
+          "descriptionLabel": "mano",
+          "source": "mano"
+        }
+      ],
+      "codeOrder": [
+        "category",
+        "modelo",
+        "tipo",
+        "medida",
+        "material",
+        "color",
+        "terminacion",
+        "amedida",
+        "desborde",
+        "mano"
+      ]
+    },
+    {
+      "id": "hidromasajes",
+      "code": "HID",
+      "displayCode": "HID",
+      "name": "Hidromasajes",
+      "singularName": "Hidromasaje",
+      "description": "Hidromasajes configurables por equipamiento, material y terminación.",
+      "image": "assets/categoria-hidromasajes.png",
+      "models": [
+        {
+          "code": "ARU",
+          "name": "Aruba"
+        },
+        {
+          "code": "MIL",
+          "name": "Milano"
+        }
+      ],
+      "fields": [
+        {
+          "id": "modelo",
+          "label": "Modelo",
+          "descriptionLabel": "",
+          "source": "models"
+        },
+        {
+          "id": "color",
+          "label": "Color",
+          "descriptionLabel": "",
+          "source": "colorHidroMini"
+        },
+        {
+          "id": "terminacion",
+          "label": "Terminaci?n",
+          "descriptionLabel": "",
+          "source": "terminacionHidroMini"
+        },
+        {
+          "id": "amedida",
+          "label": "Tipo de fabricaci?n",
+          "descriptionLabel": "",
+          "source": "aMedida"
+        },
+        {
+          "id": "equipamiento",
+          "label": "Equipamiento",
+          "descriptionLabel": "",
+          "source": "equipamiento"
+        },
+        {
+          "id": "material",
+          "label": "Material",
+          "descriptionLabel": "",
+          "source": "materialHidroMini"
+        }
+      ],
+      "codeOrder": [
+        "category",
+        "modelo",
+        "color",
+        "terminacion",
+        "amedida",
+        "equipamiento",
+        "material"
+      ],
+      "descriptionMode": "compact"
+    },
+    {
+      "id": "mini-piscinas",
+      "code": "MPI",
+      "displayCode": "MPI",
+      "name": "Mini Piscinas",
+      "singularName": "Mini Piscina",
+      "description": "Mini piscinas Aquaglass para experiencias de relax compactas y premium.",
+      "image": "assets/categoria-mini-piscinas.png",
+      "models": [
+        {
+          "code": "ARU",
+          "name": "Aruba"
+        },
+        {
+          "code": "MIL",
+          "name": "Milano"
+        }
+      ],
+      "fields": [
+        {
+          "id": "modelo",
+          "label": "Modelo",
+          "descriptionLabel": "",
+          "source": "models"
+        },
+        {
+          "id": "color",
+          "label": "Color",
+          "descriptionLabel": "",
+          "source": "colorHidroMini"
+        },
+        {
+          "id": "terminacion",
+          "label": "Terminaci?n",
+          "descriptionLabel": "",
+          "source": "terminacionHidroMini"
+        },
+        {
+          "id": "amedida",
+          "label": "Tipo de fabricaci?n",
+          "descriptionLabel": "",
+          "source": "aMedida"
+        },
+        {
+          "id": "equipamiento",
+          "label": "Equipamiento",
+          "descriptionLabel": "",
+          "source": "equipamiento"
+        },
+        {
+          "id": "material",
+          "label": "Material",
+          "descriptionLabel": "",
+          "source": "materialHidroMini"
+        }
+      ],
+      "codeOrder": [
+        "category",
+        "modelo",
+        "color",
+        "terminacion",
+        "amedida",
+        "equipamiento",
+        "material"
+      ],
+      "descriptionMode": "compact"
+    }
+  ]
+}
+  </script>
+  <script src="js/app.js"></script>
+</body>
+</html>
