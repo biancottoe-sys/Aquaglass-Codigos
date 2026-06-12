@@ -75,7 +75,7 @@ Al recargar, el modelo aparecerá automáticamente como opción.
 En `sharedOptions.medidas`, agregá una entrada:
 
 ```json
-{ "code": "180090", "name": "180 x 90 cm" }
+{ "code": "180X090", "name": "180 x 90 cm" }
 ```
 
 El valor `name` es lo que ve el usuario. El valor `code` es lo que entra en el código técnico.
