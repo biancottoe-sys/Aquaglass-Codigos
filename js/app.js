@@ -107,11 +107,21 @@
       }
       copyText(generated.description, "Descripcion copiada.");
     });
-    elements.saveHistoryBtn.addEventListener("click", saveCurrentToHistory);
-    elements.historySearch.addEventListener("input", renderHistory);
-    elements.exportCsvBtn.addEventListener("click", exportCsv);
-    elements.exportJsonBtn.addEventListener("click", exportJson);
-    elements.clearHistoryBtn.addEventListener("click", clearHistory);
+    if (elements.saveHistoryBtn) {
+      elements.saveHistoryBtn.addEventListener("click", saveCurrentToHistory);
+    }
+    if (elements.historySearch) {
+      elements.historySearch.addEventListener("input", renderHistory);
+    }
+    if (elements.exportCsvBtn) {
+      elements.exportCsvBtn.addEventListener("click", exportCsv);
+    }
+    if (elements.exportJsonBtn) {
+      elements.exportJsonBtn.addEventListener("click", exportJson);
+    }
+    if (elements.clearHistoryBtn) {
+      elements.clearHistoryBtn.addEventListener("click", clearHistory);
+    }
     elements.masterCategorySelect.addEventListener("change", function () {
       state.activeMasterCategoryId = elements.masterCategorySelect.value;
       renderMasterPanel();
@@ -654,7 +664,9 @@
       : "Faltan completar " + generated.missingCount + " opciones";
     elements.progressPercent.textContent = generated.progress + "%";
     elements.progressBar.style.width = generated.progress + "%";
-    elements.saveHistoryBtn.disabled = !generated.complete;
+    if (elements.saveHistoryBtn) {
+      elements.saveHistoryBtn.disabled = !generated.complete;
+    }
     elements.missingAlert.hidden = generated.complete || !category;
     elements.missingAlert.textContent = generated.complete ? "" : "Faltan completar: " + generated.missingLabels.join(", ") + ".";
 
@@ -900,6 +912,9 @@
   }
 
   function renderHistory() {
+    if (!elements.historyList || !elements.historySearch) {
+      return;
+    }
     var query = normalizeText(elements.historySearch.value);
     var records = state.history.filter(function (record) {
       var searchable = normalizeText([
