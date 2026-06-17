@@ -207,17 +207,41 @@
       });
       if (savedCategory) {
         savedCategory.image = bundledCategory.image;
-        if (bundledCategory.id === "hidromasajes" || bundledCategory.id === "mini-piscinas") {
+        if (bundledCategory.id === "baneras" || bundledCategory.id === "receptaculos" || bundledCategory.id === "hidromasajes" || bundledCategory.id === "mini-piscinas") {
+          savedCategory.models = cloneData(bundledCategory.models);
           savedCategory.fields = cloneData(bundledCategory.fields);
           savedCategory.codeOrder = cloneData(bundledCategory.codeOrder);
           savedCategory.descriptionMode = bundledCategory.descriptionMode;
         }
       }
     });
+    syncBundledSharedOptions(savedDatabase, bundledDatabase);
     if (bundledDatabase.brand && savedDatabase.brand) {
       savedDatabase.brand.placeholderImage = bundledDatabase.brand.placeholderImage;
       savedDatabase.brand.logo = bundledDatabase.brand.logo;
     }
+  }
+
+  function syncBundledSharedOptions(savedDatabase, bundledDatabase) {
+    [
+      "medidasBaneras",
+      "tipoBaneras",
+      "materialBaneras",
+      "colorBaneras",
+      "terminacionBaneras",
+      "desbordeDesagoteBaneras",
+      "manoBaneras",
+      "medidasReceptaculos",
+      "tipoReceptaculos",
+      "materialReceptaculos",
+      "colorReceptaculos",
+      "terminacionReceptaculos",
+      "desagoteReceptaculos"
+    ].forEach(function (source) {
+      if (bundledDatabase.sharedOptions[source]) {
+        savedDatabase.sharedOptions[source] = cloneData(bundledDatabase.sharedOptions[source]);
+      }
+    });
   }
 
   function persistMasterDatabase(message) {
@@ -541,9 +565,15 @@
     elements.configTitle.textContent = category.name;
     elements.stepLabel.textContent = "Paso 2 en adelante";
     elements.optionSections.innerHTML = "";
+    applySingleOptionDefaults(category);
 
-    category.fields.forEach(function (field, index) {
+    var visibleStep = 2;
+    category.fields.forEach(function (field) {
       var options = getFieldOptions(category, field);
+      if (options.length === 1) {
+        return;
+      }
+
       var group = document.createElement("section");
       group.className = "option-group missing";
       group.id = "field-" + field.id;
@@ -553,7 +583,8 @@
       heading.className = "option-heading";
       heading.innerHTML =
         "<h3>" + escapeHtml(field.label) + "</h3>" +
-        "<span>Paso " + String(index + 2) + "</span>";
+        "<span>Paso " + String(visibleStep) + "</span>";
+      visibleStep += 1;
 
       var grid = document.createElement("div");
       grid.className = "option-grid";
@@ -566,8 +597,7 @@
         button.dataset.optionCode = option.code;
         button.innerHTML = buildOptionMarkup(option);
         button.addEventListener("click", function () {
-          state.selections[field.id] = option.code;
-          updatePreview();
+          selectOption(category, field, option);
         });
         grid.appendChild(button);
       });
@@ -575,6 +605,30 @@
       group.appendChild(heading);
       group.appendChild(grid);
       elements.optionSections.appendChild(group);
+    });
+  }
+
+  function applySingleOptionDefaults(category) {
+    category.fields.forEach(function (field) {
+      var options = getFieldOptions(category, field);
+      if (options.length === 1) {
+        state.selections[field.id] = options[0].code;
+      }
+    });
+    pruneInvalidSelections(category);
+  }
+
+  function selectOption(category, field, option) {
+    state.selections[field.id] = option.code;
+    pruneInvalidSelections(category);
+    updatePreview();
+  }
+
+  function pruneInvalidSelections(category) {
+    category.fields.forEach(function (field) {
+      if (state.selections[field.id] && !findOption(category, field, state.selections[field.id])) {
+        delete state.selections[field.id];
+      }
     });
   }
 
@@ -764,10 +818,17 @@
   }
 
   function getFieldOptions(category, field) {
+    var options;
     if (field.source === "models") {
-      return category.models || [];
+      options = category.models || [];
+    } else {
+      options = state.database.sharedOptions[field.source] || [];
     }
-    return state.database.sharedOptions[field.source] || [];
+    return getFilteredFieldOptions(category, field, options);
+  }
+
+  function getFilteredFieldOptions(category, field, options) {
+    return options;
   }
 
   function findOption(category, field, code) {

@@ -466,10 +466,10 @@ h2 {
 }
 
 .option-card.selected {
-  color: #ffffff;
-  background: var(--primary);
-  border-color: var(--primary-dark);
-  box-shadow: 0 12px 28px rgba(17, 17, 17, 0.18);
+  color: #202423;
+  background: #d9ddda;
+  border-color: #8f9693;
+  box-shadow: 0 10px 24px rgba(70, 76, 74, 0.16);
 }
 
 .option-code {

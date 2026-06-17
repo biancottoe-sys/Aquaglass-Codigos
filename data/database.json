@@ -206,6 +206,314 @@
         "code": "ACR",
         "name": "Acrílico"
       }
+    ],
+    "medidasBaneras": [
+      {
+        "code": "140X070",
+        "name": "140 x 70 cm"
+      },
+      {
+        "code": "150X070",
+        "name": "150 x 70 cm"
+      },
+      {
+        "code": "160X070",
+        "name": "160 x 70 cm"
+      },
+      {
+        "code": "170X070",
+        "name": "170 x 70 cm"
+      },
+      {
+        "code": "200X070",
+        "name": "200 x 70 cm"
+      },
+      {
+        "code": "160X080",
+        "name": "160 x 80 cm"
+      },
+      {
+        "code": "200X080",
+        "name": "200 x 80 cm"
+      },
+      {
+        "code": "160X090",
+        "name": "160 x 90 cm"
+      },
+      {
+        "code": "200X090",
+        "name": "200 x 90 cm"
+      },
+      {
+        "code": "160X120",
+        "name": "160 x 120 cm"
+      },
+      {
+        "code": "200X120",
+        "name": "200 x 120 cm"
+      }
+    ],
+    "tipoBaneras": [
+      {
+        "code": "E",
+        "name": "Estándar"
+      },
+      {
+        "code": "P",
+        "name": "Con patas regulables"
+      },
+      {
+        "code": "F",
+        "name": "Con patas regulables + frente"
+      }
+    ],
+    "materialBaneras": [
+      {
+        "code": "A",
+        "name": "Ashtone"
+      },
+      {
+        "code": "S",
+        "name": "Solid Surface"
+      },
+      {
+        "code": "P",
+        "name": "Acrílico"
+      }
+    ],
+    "colorBaneras": [
+      {
+        "code": "0",
+        "name": "Blanco",
+        "swatch": "#ffffff"
+      }
+    ],
+    "terminacionBaneras": [
+      {
+        "code": "B",
+        "name": "Brillante"
+      },
+      {
+        "code": "M",
+        "name": "Mate"
+      },
+      {
+        "code": "A",
+        "name": "Antideslizante"
+      }
+    ],
+    "desbordeDesagoteBaneras": [
+      {
+        "code": "0",
+        "name": "Sin desagote"
+      },
+      {
+        "code": "1",
+        "name": "DTC sin desborde"
+      },
+      {
+        "code": "2",
+        "name": "DTC con desborde interno"
+      },
+      {
+        "code": "3",
+        "name": "Desagote Flat sin desborde"
+      }
+    ],
+    "manoBaneras": [
+      {
+        "code": "0",
+        "name": "Estándar (sin frente)"
+      },
+      {
+        "code": "I",
+        "name": "Izquierda"
+      },
+      {
+        "code": "D",
+        "name": "Derecha"
+      }
+    ],
+    "medidasReceptaculos": [
+      {
+        "code": "070X070",
+        "name": "70 x 70 cm"
+      },
+      {
+        "code": "080X070",
+        "name": "80 x 70 cm"
+      },
+      {
+        "code": "090X070",
+        "name": "90 x 70 cm"
+      },
+      {
+        "code": "100X070",
+        "name": "100 x 70 cm"
+      },
+      {
+        "code": "120X070",
+        "name": "120 x 70 cm"
+      },
+      {
+        "code": "130X070",
+        "name": "130 x 70 cm"
+      },
+      {
+        "code": "140X070",
+        "name": "140 x 70 cm"
+      },
+      {
+        "code": "150X070",
+        "name": "150 x 70 cm"
+      },
+      {
+        "code": "170X070",
+        "name": "170 x 70 cm"
+      },
+      {
+        "code": "200X070",
+        "name": "200 x 70 cm"
+      },
+      {
+        "code": "080X080",
+        "name": "80 x 80 cm"
+      },
+      {
+        "code": "090X080",
+        "name": "90 x 80 cm"
+      },
+      {
+        "code": "100X080",
+        "name": "100 x 80 cm"
+      },
+      {
+        "code": "120X080",
+        "name": "120 x 80 cm"
+      },
+      {
+        "code": "140X080",
+        "name": "140 x 80 cm"
+      },
+      {
+        "code": "150X080",
+        "name": "150 x 80 cm"
+      },
+      {
+        "code": "170X080",
+        "name": "170 x 80 cm"
+      },
+      {
+        "code": "180X080",
+        "name": "180 x 80 cm"
+      },
+      {
+        "code": "200X080",
+        "name": "200 x 80 cm"
+      },
+      {
+        "code": "090X090",
+        "name": "90 x 90 cm"
+      },
+      {
+        "code": "100X090",
+        "name": "100 x 90 cm"
+      },
+      {
+        "code": "120X090",
+        "name": "120 x 90 cm"
+      },
+      {
+        "code": "140X090",
+        "name": "140 x 90 cm"
+      },
+      {
+        "code": "160X090",
+        "name": "160 x 90 cm"
+      },
+      {
+        "code": "200X090",
+        "name": "200 x 90 cm"
+      },
+      {
+        "code": "100X100",
+        "name": "100 x 100 cm"
+      },
+      {
+        "code": "120X100",
+        "name": "120 x 100 cm"
+      },
+      {
+        "code": "140X100",
+        "name": "140 x 100 cm"
+      },
+      {
+        "code": "160X100",
+        "name": "160 x 100 cm"
+      },
+      {
+        "code": "200X100",
+        "name": "200 x 100 cm"
+      }
+    ],
+    "tipoReceptaculos": [
+      {
+        "code": "E",
+        "name": "Desagote estándar"
+      },
+      {
+        "code": "D",
+        "name": "DTC (desagote oculto)"
+      }
+    ],
+    "materialReceptaculos": [
+      {
+        "code": "A",
+        "name": "Ashstone"
+      },
+      {
+        "code": "S",
+        "name": "Solid Surface"
+      }
+    ],
+    "colorReceptaculos": [
+      {
+        "code": "0",
+        "name": "Blanco",
+        "swatch": "#ffffff"
+      }
+    ],
+    "terminacionReceptaculos": [
+      {
+        "code": "B",
+        "name": "Brillante"
+      },
+      {
+        "code": "M",
+        "name": "Mate"
+      },
+      {
+        "code": "A",
+        "name": "Antideslizante (PU)"
+      }
+    ],
+    "desagoteReceptaculos": [
+      {
+        "code": "0",
+        "name": "Sin desagote"
+      },
+      {
+        "code": "1",
+        "name": "Sin desagote"
+      },
+      {
+        "code": "2",
+        "name": "Desagote Flat 90 mm"
+      },
+      {
+        "code": "3",
+        "name": "Vertical 90 mm"
+      }
     ]
   },
   "categories": [
@@ -218,10 +526,6 @@
       "description": "Bañeras premium Aquaglass para proyectos residenciales y comerciales.",
       "image": "assets/categoria-baneras.png",
       "models": [
-        {
-          "code": "ARU",
-          "name": "Aruba"
-        },
         {
           "code": "MIL",
           "name": "Milano"
@@ -238,31 +542,31 @@
           "id": "tipo",
           "label": "Tipo",
           "descriptionLabel": "",
-          "source": "tipoBaneraReceptaculo"
-        },
-        {
-          "id": "medida",
-          "label": "Medida",
-          "descriptionLabel": "",
-          "source": "medidas"
+          "source": "tipoBaneras"
         },
         {
           "id": "material",
           "label": "Material",
           "descriptionLabel": "material",
-          "source": "materialBaneraReceptaculo"
+          "source": "materialBaneras"
+        },
+        {
+          "id": "medida",
+          "label": "Medida",
+          "descriptionLabel": "",
+          "source": "medidasBaneras"
         },
         {
           "id": "color",
           "label": "Color",
           "descriptionLabel": "color",
-          "source": "colorBaneraReceptaculo"
+          "source": "colorBaneras"
         },
         {
           "id": "terminacion",
           "label": "Terminación",
           "descriptionLabel": "terminación",
-          "source": "terminacionBaneraReceptaculo"
+          "source": "terminacionBaneras"
         },
         {
           "id": "amedida",
@@ -274,21 +578,21 @@
           "id": "desborde",
           "label": "Desborde / Desagote",
           "descriptionLabel": "",
-          "source": "desbordeDesagote"
+          "source": "desbordeDesagoteBaneras"
         },
         {
           "id": "mano",
           "label": "Mano",
           "descriptionLabel": "mano",
-          "source": "mano"
+          "source": "manoBaneras"
         }
       ],
       "codeOrder": [
         "category",
         "modelo",
         "tipo",
-        "medida",
         "material",
+        "medida",
         "color",
         "terminacion",
         "amedida",
@@ -307,7 +611,7 @@
       "models": [
         {
           "code": "MON",
-          "name": "Monaco"
+          "name": "Mónaco"
         },
         {
           "code": "CAP",
@@ -325,31 +629,31 @@
           "id": "tipo",
           "label": "Tipo",
           "descriptionLabel": "",
-          "source": "tipoBaneraReceptaculo"
-        },
-        {
-          "id": "medida",
-          "label": "Medida",
-          "descriptionLabel": "",
-          "source": "medidas"
+          "source": "tipoReceptaculos"
         },
         {
           "id": "material",
           "label": "Material",
           "descriptionLabel": "material",
-          "source": "materialBaneraReceptaculo"
+          "source": "materialReceptaculos"
+        },
+        {
+          "id": "medida",
+          "label": "Medida",
+          "descriptionLabel": "",
+          "source": "medidasReceptaculos"
         },
         {
           "id": "color",
           "label": "Color",
           "descriptionLabel": "color",
-          "source": "colorBaneraReceptaculo"
+          "source": "colorReceptaculos"
         },
         {
           "id": "terminacion",
-          "label": "Terminación",
-          "descriptionLabel": "terminación",
-          "source": "terminacionBaneraReceptaculo"
+          "label": "Terminaci?n",
+          "descriptionLabel": "terminaci?n",
+          "source": "terminacionReceptaculos"
         },
         {
           "id": "amedida",
@@ -359,28 +663,21 @@
         },
         {
           "id": "desborde",
-          "label": "Desborde / Desagote",
+          "label": "Desagote (accesorio)",
           "descriptionLabel": "",
-          "source": "desbordeDesagote"
-        },
-        {
-          "id": "mano",
-          "label": "Mano",
-          "descriptionLabel": "mano",
-          "source": "mano"
+          "source": "desagoteReceptaculos"
         }
       ],
       "codeOrder": [
         "category",
         "modelo",
         "tipo",
-        "medida",
         "material",
+        "medida",
         "color",
         "terminacion",
         "amedida",
-        "desborde",
-        "mano"
+        "desborde"
       ]
     },
     {
