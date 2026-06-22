@@ -11,7 +11,12 @@
     activeCategory: null,
     activeMasterCategoryId: "",
     selections: {},
-    history: []
+    history: [],
+    totalCoding: {
+      rows: [],
+      activeCategoryId: "all",
+      query: ""
+    }
   };
 
   var elements = {};
@@ -31,6 +36,8 @@
         renderCategories();
         renderMasterPanel();
         renderHistory();
+        buildTotalCodingRows();
+        renderTotalCoding();
         resetConfiguration();
       })
       .catch(function () {
@@ -41,11 +48,15 @@
 
   function cacheElements() {
     elements.databaseStatus = document.getElementById("databaseStatus");
+    elements.totalCodingBtn = document.getElementById("totalCodingBtn");
+    elements.classicCodingBtn = document.getElementById("classicCodingBtn");
     elements.masterToggleBtn = document.getElementById("masterToggleBtn");
     elements.resetBtn = document.getElementById("resetBtn");
     elements.heroCode = document.getElementById("heroCode");
     elements.breadcrumb = document.getElementById("breadcrumb");
     elements.categoryGrid = document.getElementById("categoryGrid");
+    elements.classicCategorySection = document.getElementById("classicCategorySection");
+    elements.classicWorkspace = document.getElementById("classicWorkspace");
     elements.configTitle = document.getElementById("configTitle");
     elements.stepLabel = document.getElementById("stepLabel");
     elements.backToCategoriesBtn = document.getElementById("backToCategoriesBtn");
@@ -83,29 +94,41 @@
     elements.optionList = document.getElementById("optionList");
     elements.exportMasterBtn = document.getElementById("exportMasterBtn");
     elements.resetMasterBtn = document.getElementById("resetMasterBtn");
+    elements.totalCodingSection = document.getElementById("totalCodingSection");
+    elements.totalCodingStats = document.getElementById("totalCodingStats");
+    elements.totalCodingTabs = document.getElementById("totalCodingTabs");
+    elements.totalCodingSearch = document.getElementById("totalCodingSearch");
+    elements.totalCodingHead = document.getElementById("totalCodingHead");
+    elements.totalCodingBody = document.getElementById("totalCodingBody");
+    elements.totalCodingCount = document.getElementById("totalCodingCount");
   }
 
   function bindEvents() {
+    elements.totalCodingBtn.addEventListener("click", showTotalCoding);
+    elements.classicCodingBtn.addEventListener("click", showClassicCoding);
     elements.masterToggleBtn.addEventListener("click", toggleMasterPanel);
-    elements.resetBtn.addEventListener("click", resetConfiguration);
+    elements.resetBtn.addEventListener("click", function () {
+      resetConfiguration();
+      showClassicCoding();
+    });
     elements.backToCategoriesBtn.addEventListener("click", function () {
       document.getElementById("categoryTitle").scrollIntoView({ behavior: "smooth", block: "start" });
     });
     elements.copyCodeBtn.addEventListener("click", function () {
       var generated = buildGeneratedData();
       if (!generated.complete) {
-        showFeedback("Completa todas las opciones antes de copiar el codigo.", true);
+        showFeedback("Completá todas las opciones antes de copiar el código.", true);
         return;
       }
-      copyText(generated.code, "Codigo copiado.");
+      copyText(generated.code, "Código copiado.");
     });
     elements.copyDescriptionBtn.addEventListener("click", function () {
       var generated = buildGeneratedData();
       if (!generated.complete) {
-        showFeedback("Completa todas las opciones antes de copiar la descripcion.", true);
+        showFeedback("Completá todas las opciones antes de copiar la descripción.", true);
         return;
       }
-      copyText(generated.description, "Descripcion copiada.");
+      copyText(generated.description, "Descripción copiada.");
     });
     if (elements.saveHistoryBtn) {
       elements.saveHistoryBtn.addEventListener("click", saveCurrentToHistory);
@@ -131,6 +154,10 @@
     elements.addOptionBtn.addEventListener("click", addMasterOption);
     elements.exportMasterBtn.addEventListener("click", exportMasterDatabase);
     elements.resetMasterBtn.addEventListener("click", resetMasterDatabase);
+    elements.totalCodingSearch.addEventListener("input", function () {
+      state.totalCoding.query = elements.totalCodingSearch.value;
+      renderTotalCodingTable();
+    });
   }
 
   function loadDatabase() {
@@ -216,6 +243,11 @@
         return category.id === bundledCategory.id;
       });
       if (savedCategory) {
+        savedCategory.code = bundledCategory.code;
+        savedCategory.displayCode = bundledCategory.displayCode;
+        savedCategory.name = bundledCategory.name;
+        savedCategory.singularName = bundledCategory.singularName;
+        savedCategory.description = bundledCategory.description;
         savedCategory.image = bundledCategory.image;
         if (bundledCategory.id === "baneras" || bundledCategory.id === "receptaculos" || bundledCategory.id === "hidromasajes" || bundledCategory.id === "mini-piscinas") {
           savedCategory.models = cloneData(bundledCategory.models);
@@ -234,6 +266,7 @@
 
   function syncBundledSharedOptions(savedDatabase, bundledDatabase) {
     [
+      "aMedida",
       "medidasBaneras",
       "tipoBaneras",
       "materialBaneras",
@@ -246,7 +279,22 @@
       "materialReceptaculos",
       "colorReceptaculos",
       "terminacionReceptaculos",
-      "desagoteReceptaculos"
+      "desagoteReceptaculos",
+      "medidasHidromasajes",
+      "tipoHidromasajes",
+      "materialHidromasajes",
+      "colorHidromasajes",
+      "terminacionHidromasajes",
+      "equipamientoHidromasajes",
+      "desbordeDesagoteHidromasajes",
+      "medidasMiniPiscinas",
+      "tipoMiniPiscinas",
+      "materialMiniPiscinas",
+      "colorMiniPiscinas",
+      "terminacionMiniPiscinas",
+      "equipamientoMiniPiscinas",
+      "revestimientoLateralMiniPiscinas",
+      "filtradoCalefaccionMiniPiscinas"
     ].forEach(function (source) {
       if (bundledDatabase.sharedOptions[source]) {
         savedDatabase.sharedOptions[source] = cloneData(bundledDatabase.sharedOptions[source]);
@@ -258,6 +306,8 @@
     localStorage.setItem(MASTER_STORAGE_KEY, JSON.stringify(state.database));
     renderCategories();
     renderMasterPanel();
+    buildTotalCodingRows();
+    renderTotalCoding();
     if (state.activeCategory) {
       var currentCategory = findCategory(state.activeCategory.id);
       state.activeCategory = currentCategory || null;
@@ -301,7 +351,252 @@
     });
   }
 
+  function showTotalCoding() {
+    elements.totalCodingSection.hidden = false;
+    elements.classicCategorySection.hidden = true;
+    elements.classicWorkspace.hidden = true;
+    elements.masterSection.hidden = true;
+    elements.totalCodingBtn.classList.add("active");
+    elements.masterToggleBtn.textContent = "Trabajar maestra";
+    renderTotalCoding();
+    elements.totalCodingSection.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function showClassicCoding() {
+    elements.totalCodingSection.hidden = true;
+    elements.classicCategorySection.hidden = false;
+    elements.classicWorkspace.hidden = false;
+    elements.totalCodingBtn.classList.remove("active");
+    document.getElementById("categoryTitle").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function buildTotalCodingRows() {
+    state.totalCoding.rows = [];
+    if (!state.database) {
+      return;
+    }
+    state.database.categories.forEach(function (category) {
+      buildCategoryCombinationSelections(category).forEach(function (selections) {
+        state.totalCoding.rows.push(buildTotalCodingRow(category, selections));
+      });
+    });
+  }
+
+  function buildCategoryCombinationSelections(category) {
+    var rows = [];
+    walkFields(0, {});
+    return rows;
+
+    function walkFields(index, selections) {
+      if (index === category.fields.length) {
+        rows.push(cloneData(selections));
+        return;
+      }
+      var field = category.fields[index];
+      var options = getFieldOptionsForSelections(category, field, selections);
+      options.forEach(function (option) {
+        selections[field.id] = option.code;
+        walkFields(index + 1, selections);
+      });
+      delete selections[field.id];
+    }
+  }
+
+  function getFieldOptionsForSelections(category, field, selections) {
+    var options = field.source === "models"
+      ? category.models || []
+      : state.database.sharedOptions[field.source] || [];
+    if (field.id !== "medida") {
+      return options;
+    }
+    var selectedModel = selections.modelo;
+    var modelOptions = options.filter(function (option) {
+      return !option.models || !option.models.length || (selectedModel && option.models.indexOf(selectedModel) !== -1);
+    });
+    return modelOptions.length ? modelOptions : options;
+  }
+
+  function findOptionForSelections(category, fieldId, code, selections) {
+    var field = category.fields.find(function (item) {
+      return item.id === fieldId;
+    });
+    if (!field || !code) {
+      return null;
+    }
+    return getFieldOptionsForSelections(category, field, selections).find(function (option) {
+      return option.code === code;
+    }) || null;
+  }
+
+  function buildTotalCodingRow(category, selections) {
+    var selectedItems = category.fields.map(function (field) {
+      return {
+        field: field,
+        option: findOptionForSelections(category, field.id, selections[field.id], selections)
+      };
+    });
+    var optionById = selectedItems.reduce(function (result, item) {
+      result[item.field.id] = item.option;
+      return result;
+    }, {});
+    var code = category.codeOrder.map(function (part) {
+      return part === "category" ? category.code : selections[part];
+    }).join("-");
+    var description = buildDescription(category, selectedItems);
+
+    return {
+      code: code,
+      description: description,
+      categoryId: category.id,
+      categoryName: category.name,
+      categoryCode: category.code,
+      modelo: optionById.modelo ? optionById.modelo.name : "",
+      tipo: optionById.tipo ? optionById.tipo.name : "",
+      material: optionById.material ? optionById.material.name : "",
+      medida: optionById.medida ? optionById.medida.name : "",
+      color: optionById.color ? optionById.color.name : "",
+      terminacion: optionById.terminacion ? optionById.terminacion.name : "",
+      amedida: optionById.amedida ? optionById.amedida.name : "",
+      desborde: optionById.desborde ? optionById.desborde.name : "",
+      equipamiento: optionById.equipamiento ? optionById.equipamiento.name : "",
+      revestimiento: optionById.revestimiento ? optionById.revestimiento.name : "",
+      filtrado: optionById.filtrado ? optionById.filtrado.name : ""
+    };
+  }
+
+  function renderTotalCoding() {
+    if (!state.database || !elements.totalCodingStats) {
+      return;
+    }
+    renderTotalCodingStats();
+    renderTotalCodingTabs();
+    renderTotalCodingTable();
+  }
+
+  function renderTotalCodingStats() {
+    var total = state.totalCoding.rows.length;
+    var stats = [{
+      label: "Total",
+      value: total
+    }].concat(state.database.categories.map(function (category) {
+      return {
+        label: category.name,
+        value: state.totalCoding.rows.filter(function (row) {
+          return row.categoryId === category.id;
+        }).length
+      };
+    }));
+
+    elements.totalCodingStats.innerHTML = stats.map(function (stat) {
+      return '<article class="total-stat"><span>' + escapeHtml(stat.label) + '</span><strong>' + escapeHtml(formatNumber(stat.value)) + "</strong></article>";
+    }).join("");
+    elements.totalCodingCount.textContent = formatNumber(total) + " códigos";
+  }
+
+  function renderTotalCodingTabs() {
+    var tabs = [{ id: "all", name: "Todas" }].concat(state.database.categories.map(function (category) {
+      return { id: category.id, name: category.name };
+    }));
+    elements.totalCodingTabs.innerHTML = "";
+    tabs.forEach(function (tab) {
+      var button = document.createElement("button");
+      button.type = "button";
+      button.className = "total-tab";
+      button.classList.toggle("active", state.totalCoding.activeCategoryId === tab.id);
+      button.textContent = tab.name;
+      button.addEventListener("click", function () {
+        state.totalCoding.activeCategoryId = tab.id;
+        renderTotalCodingTabs();
+        renderTotalCodingTable();
+      });
+      elements.totalCodingTabs.appendChild(button);
+    });
+  }
+
+  function renderTotalCodingTable() {
+    var rows = getVisibleTotalCodingRows();
+    var headers = [
+      "Código final",
+      "Descripción",
+      "Categoría",
+      "Modelo",
+      "Tipo",
+      "Material",
+      "Medida",
+      "Color",
+      "Terminación",
+      "A medida",
+      "Desborde / Desagote",
+      "Equipamiento",
+      "Revestimiento lateral",
+      "Filtrado y calefacción"
+    ];
+    elements.totalCodingHead.innerHTML = "<tr>" + headers.map(function (header) {
+      return "<th>" + escapeHtml(header) + "</th>";
+    }).join("") + "</tr>";
+
+    if (!rows.length) {
+      elements.totalCodingBody.innerHTML = '<tr><td class="total-empty" colspan="' + headers.length + '">No hay códigos para esa búsqueda.</td></tr>';
+      elements.totalCodingCount.textContent = "0 códigos visibles";
+      return;
+    }
+
+    elements.totalCodingBody.innerHTML = rows.map(function (row) {
+      return "<tr>" +
+        '<td class="total-code">' + escapeHtml(row.code) + "</td>" +
+        '<td class="total-description">' + escapeHtml(row.description) + "</td>" +
+        "<td>" + escapeHtml(row.categoryName) + "</td>" +
+        "<td>" + escapeHtml(row.modelo) + "</td>" +
+        "<td>" + escapeHtml(row.tipo) + "</td>" +
+        "<td>" + escapeHtml(row.material) + "</td>" +
+        "<td>" + escapeHtml(row.medida) + "</td>" +
+        "<td>" + escapeHtml(row.color) + "</td>" +
+        "<td>" + escapeHtml(row.terminacion) + "</td>" +
+        "<td>" + escapeHtml(row.amedida) + "</td>" +
+        "<td>" + escapeHtml(row.desborde) + "</td>" +
+        "<td>" + escapeHtml(row.equipamiento) + "</td>" +
+        "<td>" + escapeHtml(row.revestimiento) + "</td>" +
+        "<td>" + escapeHtml(row.filtrado) + "</td>" +
+        "</tr>";
+    }).join("");
+    elements.totalCodingCount.textContent = formatNumber(rows.length) + " códigos visibles";
+  }
+
+  function getVisibleTotalCodingRows() {
+    var query = normalizeText(state.totalCoding.query);
+    return state.totalCoding.rows.filter(function (row) {
+      if (state.totalCoding.activeCategoryId !== "all" && row.categoryId !== state.totalCoding.activeCategoryId) {
+        return false;
+      }
+      if (!query) {
+        return true;
+      }
+      return normalizeText([
+        row.code,
+        row.description,
+        row.categoryName,
+        row.modelo,
+        row.tipo,
+        row.material,
+        row.medida,
+        row.color,
+        row.terminacion,
+        row.amedida,
+        row.desborde,
+        row.equipamiento,
+        row.revestimiento,
+        row.filtrado
+      ].join(" ")).indexOf(query) !== -1;
+    });
+  }
+
   function toggleMasterPanel() {
+    if (!elements.totalCodingSection.hidden) {
+      elements.totalCodingSection.hidden = true;
+      elements.classicCategorySection.hidden = false;
+      elements.classicWorkspace.hidden = false;
+      elements.totalCodingBtn.classList.remove("active");
+    }
     elements.masterSection.hidden = !elements.masterSection.hidden;
     elements.masterToggleBtn.textContent = elements.masterSection.hidden ? "Trabajar maestra" : "Cerrar maestra";
     if (!elements.masterSection.hidden) {
@@ -344,7 +639,7 @@
       var row = document.createElement("div");
       row.className = "master-row";
       row.innerHTML =
-        '<input type="text" value="' + escapeAttribute(model.code) + '" aria-label="Codigo de modelo">' +
+        '<input type="text" value="' + escapeAttribute(model.code) + '" aria-label="Código de modelo">' +
         '<input type="text" value="' + escapeAttribute(model.name) + '" aria-label="Nombre de modelo">' +
         '<button type="button" class="secondary-button" data-action="save">Guardar</button>' +
         '<button type="button" class="danger-button" data-action="delete">Eliminar</button>';
@@ -409,7 +704,7 @@
       var row = document.createElement("div");
       row.className = "master-row option-master-row";
       row.innerHTML =
-        '<input type="text" value="' + escapeAttribute(option.code) + '" aria-label="Codigo de variante">' +
+        '<input type="text" value="' + escapeAttribute(option.code) + '" aria-label="Código de variante">' +
         '<input type="text" value="' + escapeAttribute(option.name) + '" aria-label="Nombre de variante">' +
         '<input type="color" value="' + escapeAttribute(option.swatch || "#ffffff") + '" aria-label="Color de variante">' +
         '<button type="button" class="secondary-button" data-action="save">Guardar</button>' +
@@ -542,6 +837,8 @@
     state.selections = {};
     renderCategories();
     renderMasterPanel();
+    buildTotalCodingRows();
+    renderTotalCoding();
     resetConfiguration();
     showMasterStatus("Base original restaurada.");
   }
@@ -564,9 +861,9 @@
     state.activeCategory = null;
     state.selections = {};
     updateActiveCategoryCards();
-    elements.configTitle.textContent = "Configuracion";
+    elements.configTitle.textContent = "Configuración";
     elements.stepLabel.textContent = "Paso 2";
-    elements.optionSections.innerHTML = '<p class="history-empty">Selecciona una familia para ver modelos y variantes disponibles.</p>';
+    elements.optionSections.innerHTML = '<p class="history-empty">Seleccioná una familia para ver modelos y variantes disponibles.</p>';
     updatePreview();
   }
 
@@ -631,6 +928,11 @@
   function selectOption(category, field, option) {
     state.selections[field.id] = option.code;
     pruneInvalidSelections(category);
+    if (category.id === "mini-piscinas" && field.id === "modelo") {
+      renderOptionSections();
+      updatePreview();
+      return;
+    }
     updatePreview();
   }
 
@@ -660,7 +962,7 @@
     elements.summaryCategory.textContent = category ? (category.displayCode || category.code) : "---";
     elements.summaryImage.src = category ? (category.image || state.database.brand.placeholderImage) : "assets/placeholder-product.png";
     elements.progressText.textContent = generated.complete
-      ? "Configuracion completa"
+      ? "Configuración completa"
       : "Faltan completar " + generated.missingCount + " opciones";
     elements.progressPercent.textContent = generated.progress + "%";
     elements.progressBar.style.width = generated.progress + "%";
@@ -680,7 +982,7 @@
     if (!category) {
       return {
         code: "---",
-        description: "Selecciona una familia para comenzar.",
+        description: "Seleccioná una familia para comenzar.",
         complete: false,
         missingCount: 0,
         missingLabels: [],
@@ -703,7 +1005,7 @@
     var selectedCount = selectedItems.length - missing.length;
     var progress = Math.round((selectedCount / category.fields.length) * 100);
     var code = complete ? buildCode(category) : buildPartialCode(category);
-    var description = complete ? buildDescription(category, selectedItems) : "Completa las opciones para generar la descripcion comercial.";
+    var description = complete ? buildDescription(category, selectedItems) : "Completá las opciones para generar la descripción comercial.";
     var model = selectedItems.find(function (item) {
       return item.field.id === "modelo";
     });
@@ -804,7 +1106,7 @@
       crumbs.push(generated.modelName);
     }
     if (generated.category) {
-      crumbs.push("Configuracion");
+      crumbs.push("Configuración");
     }
     elements.breadcrumb.innerHTML = crumbs.map(function (crumb) {
       return "<span>" + escapeHtml(crumb) + "</span>";
@@ -840,6 +1142,13 @@
   }
 
   function getFilteredFieldOptions(category, field, options) {
+    if (field.id === "medida") {
+      var selectedModel = state.selections.modelo;
+      var modelFilteredOptions = options.filter(function (option) {
+        return !option.models || !option.models.length || (selectedModel && option.models.indexOf(selectedModel) !== -1);
+      });
+      return modelFilteredOptions.length ? modelFilteredOptions : options;
+    }
     return options;
   }
 
@@ -868,7 +1177,7 @@
   function saveCurrentToHistory() {
     var generated = buildGeneratedData();
     if (!generated.complete) {
-      showFeedback("No se puede guardar una configuracion incompleta.", true);
+      showFeedback("No se puede guardar una configuración incompleta.", true);
       updatePreview();
       return;
     }
@@ -896,7 +1205,7 @@
     state.history = state.history.slice(0, MAX_HISTORY);
     persistHistory();
     renderHistory();
-    showFeedback("Configuracion guardada en el historial.");
+    showFeedback("Configuración guardada en el historial.");
   }
 
   function loadHistory() {
@@ -929,7 +1238,7 @@
     elements.historyList.innerHTML = "";
 
     if (records.length === 0) {
-      elements.historyList.innerHTML = '<p class="history-empty">Sin configuraciones guardadas.</p>';
+      elements.historyList.innerHTML = '<p class="history-empty">Sin configuraciónes guardadas.</p>';
       return;
     }
 
@@ -960,7 +1269,7 @@
           return;
         }
         if (button.dataset.action === "copy") {
-          copyText(record.code, "Codigo copiado desde historial.");
+          copyText(record.code, "Código copiado desde historial.");
         }
         if (button.dataset.action === "delete") {
           deleteHistoryRecord(record.id);
@@ -997,7 +1306,7 @@
   }
 
   function exportCsv() {
-    var rows = [["Fecha", "Hora", "Categoria", "Modelo", "Codigo", "Descripcion"]].concat(state.history.map(function (record) {
+    var rows = [["Fecha", "Hora", "Categoría", "Modelo", "Código", "Descripción"]].concat(state.history.map(function (record) {
       return [record.date, record.time, record.category, record.model, record.code, record.description];
     }));
     var csv = rows.map(function (row) {
@@ -1100,6 +1409,10 @@
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function formatNumber(value) {
+    return Number(value || 0).toLocaleString("es-AR");
   }
 
   function sentenceCase(value) {
